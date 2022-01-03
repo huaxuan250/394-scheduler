@@ -1,4 +1,5 @@
 import React from "react";
+import "./App.css";
 
 const schedule = {
   title: "CS Courses for 2018-2019",
@@ -45,14 +46,20 @@ const Course = ({ course }) => (
   /*
     To Use the return value of a function call, we need to use {} to enclose it
   */
-
-  <div>
-    {getCourseTerm(course)} CS {getCourseNumber(course)}: {course.title}
+  <div className="card m-1 p-2">
+    <div className="card-body">
+      <div className="card-title">
+        <b>
+          {getCourseTerm(course)} CS {getCourseNumber(course)}
+        </b>
+      </div>
+      <div className="card-text">{course.title}</div>
+    </div>
   </div>
 );
 
 const CourseList = ({ courses }) => (
-  <div>
+  <div className="course-list">
     {Object.values(courses).map((course) => (
       <Course course={course} />
     ))}
@@ -60,7 +67,7 @@ const CourseList = ({ courses }) => (
 );
 
 const App = () => (
-  <div>
+  <div className="container">
     <Banner title={schedule.title} />
     <CourseList courses={schedule.courses} />
   </div>
