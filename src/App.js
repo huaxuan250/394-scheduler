@@ -1,5 +1,5 @@
-import React from "react";
 import "./App.css";
+import React, { useState, useEffect } from "react";
 
 const schedule = {
   title: "CS Courses for 2018-2019",
@@ -35,7 +35,7 @@ const terms = { F: "Fall", W: "Winter", S: "Spring" };
   Component Declaration Method:
   1. const name = (input) => (Operation of input); Good for non JSX
   2. const name = ({input}) => <div>(Operation of input)<div/> Good for JSX
-
+  3. If =>(), it is always going to return, if =>{} no return by default
 */
 
 const getCourseTerm = (course) => terms[course.id.charAt(0)];
@@ -66,11 +66,30 @@ const CourseList = ({ courses }) => (
   </div>
 );
 
-const App = () => (
-  <div className="container">
-    <Banner title={schedule.title} />
-    <CourseList courses={schedule.courses} />
-  </div>
-);
+const App = () => {
+  const [schedule, setSchedule] = useState();
+  const url = "https://courses.cs.northwestern.edu/394/data/cs-courses.php";
+
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      const response = await fetch(url);
+      if (!response.ok) throw response;
+      const json = await response.json();
+      setSchedule(json);
+    };
+    fetchSchedule();
+  }, []);
+
+  if (!schedule) {
+    return <h1>Loading schedule...</h1>;
+  }
+
+  return (
+    <div className="container">
+      <Banner title={schedule.title} />
+      <CourseList courses={schedule.courses} />
+    </div>
+  );
+};
 
 export default App;
