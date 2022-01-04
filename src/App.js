@@ -1,35 +1,42 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
 
-const schedule = {
-  title: "CS Courses for 2018-2019",
-  courses: {
-    F101: {
-      id: "F101",
-      meets: "MWF 11:00-11:50",
-      title: "Computer Science: Concepts, Philosophy, and Connections",
-    },
-    F110: {
-      id: "F110",
-      meets: "MWF 10:00-10:50",
-      title: "Intro Programming for non-majors",
-    },
-    S313: {
-      id: "S313",
-      meets: "TuTh 15:30-16:50",
-      title: "Tangible Interaction Design and Learning",
-    },
-    S314: {
-      id: "S314",
-      meets: "TuTh 9:30-10:50",
-      title: "Tech & Human Interaction",
-    },
-  },
-};
-
 const Banner = ({ title }) => <h1>{title}</h1>;
 
 const terms = { F: "Fall", W: "Winter", S: "Spring" };
+
+// Bottom Up Approach
+// A button needs to have its text, its checked state, and the ability to change the state
+// Hence, term, checked, setTerm
+const TermButton = ({ term, checked, setTerm }) => (
+  <div>
+    <input
+      type="radio"
+      id={term}
+      className="btn-check"
+      autoComplete="off"
+      checked={checked}
+      onChange={() => setTerm(term)}
+    />
+    <label class="btn btn-success m-1 p-2" htmlFor={term}>
+      {term}
+    </label>
+  </div>
+);
+
+// A Term selector has buttons, and has information regarding which term is selected or not
+const TermSelector = ({ term, setTerm }) => (
+  <div className="btn-group">
+    {Object.values(terms).map((value) => (
+      <TermButton
+        key={value}
+        term={value}
+        checked={value === term}
+        setTerm={setTerm}
+      />
+    ))}
+  </div>
+);
 
 /*
   Component Declaration Method:
@@ -58,13 +65,23 @@ const Course = ({ course }) => (
   </div>
 );
 
-const CourseList = ({ courses }) => (
-  <div className="course-list">
-    {Object.values(courses).map((course) => (
-      <Course course={course} />
-    ))}
-  </div>
-);
+const CourseList = ({ courses }) => {
+  const [term, setTerm] = useState("Fall");
+  const termCourses = Object.values(courses).filter(
+    (course) => term === getCourseTerm(course)
+  );
+
+  return (
+    <div>
+      <TermSelector term={term} setTerm={setTerm} />
+      <div className="course-list">
+        {Object.values(termCourses).map((course) => (
+          <Course course={course} />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const App = () => {
   const [schedule, setSchedule] = useState();
