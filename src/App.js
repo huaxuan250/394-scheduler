@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import CourseList from "./components/CourseList";
 import { addScheduleTimes } from "./utilities/addTimes.js";
 import { useData } from "./utilities/firebase.js";
